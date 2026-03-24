@@ -67,6 +67,9 @@ int main() {
     return 0;
 }
 ```
+Chương trình thực thi
++ Điều khiển LED + printf
++ Chạy trong user-space
 ### Tạo script tự khởi chạy
 ```
 #!/bin/sh
@@ -91,6 +94,14 @@ Cấp quyền thực thi:
 ```
 chmod +x package/blink/S99blink
 ```
+
+File chạy thật trên BBB khi boot
+
+- gọi /usr/bin/blink
+- điểu khiển start/stop app
+
+Tác động: Ảnh hưởng trực tiếp đến hệ thống 
+-> quyết định app có chạy hay không
 ### Tạo Config.in
 ```
 config BR2_PACKAGE_BLINK
@@ -98,6 +109,13 @@ config BR2_PACKAGE_BLINK
     help
       Ung dung dieu khien LED USR2 va tu khoi dong cho BBB.
 ```
+
+Hiển thị option trong menuconfig
+-> để tick chọn package
+
+Tác động:
+Không ảnh hưởng runtime
+-> chỉ dùng để bật/tắt build
 
 ### Tạo file blink.mk
 ```
@@ -119,6 +137,17 @@ endef
 
 $(eval $(generic-package))
 ```
+
+File dạy Buildroot cách build và cài app
+
+- compile blink.c -> blink
+- copy vào /usr/bin/
+- copy script vào /etc/init.d/
+
+ Tác động:
+Không chạy trên BBB
+-> chỉ chạy lúc build firmware
+
 ## Thêm package vào Buildroot
 Mở file:
 ```
